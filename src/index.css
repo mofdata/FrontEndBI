@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.bar-chart-1{
+  margin-top: 31px;
+}
+/* .recharts-default-legend{
+  margin:-10px !important;
+} */
