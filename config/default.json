@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://202.45.146.41",
+  "Customer": {
+    "dbConfig": {
+      "host": "prod-db-server"
+    },
+    "credit": {
+      "initialDays": 30
+    }
+  }
+}

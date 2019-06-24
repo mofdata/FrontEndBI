@@ -8,9 +8,7 @@ import Dashboard from './components/dashboard/Dashboard';
 function App() {
   return (
     <Provider store={store}>
-    <div style={{height: 400}}>
       <Dashboard />
-    </div>
     </Provider>
   );
 }

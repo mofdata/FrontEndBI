@@ -1,708 +1,93 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { dashboard } from "../../actions/dashboardActions";
+import {
+  getExpenditure,
+  setLoading,
+  resetLoading
+} from "../../actions/dashboardActions";
 import { ResponsiveBar } from "@nivo/bar";
 
-const data = [
-  {
-    country: "AD",
-    "hot dog": 142,
-    "hot dogColor": "hsl(280, 70%, 50%)",
-    burger: 35,
-    burgerColor: "hsl(142, 70%, 50%)",
-    sandwich: 191,
-    sandwichColor: "hsl(182, 70%, 50%)",
-    kebab: 178,
-    kebabColor: "hsl(29, 70%, 50%)",
-    fries: 20,
-    friesColor: "hsl(276, 70%, 50%)",
-    donut: 123,
-    donutColor: "hsl(45, 70%, 50%)"
-  },
-  {
-    country: "AE",
-    "hot dog": 139,
-    "hot dogColor": "hsl(314, 70%, 50%)",
-    burger: 71,
-    burgerColor: "hsl(22, 70%, 50%)",
-    sandwich: 167,
-    sandwichColor: "hsl(348, 70%, 50%)",
-    kebab: 108,
-    kebabColor: "hsl(161, 70%, 50%)",
-    fries: 176,
-    friesColor: "hsl(120, 70%, 50%)",
-    donut: 42,
-    donutColor: "hsl(222, 70%, 50%)"
-  },
-  {
-    country: "AF",
-    "hot dog": 195,
-    "hot dogColor": "hsl(302, 70%, 50%)",
-    burger: 125,
-    burgerColor: "hsl(313, 70%, 50%)",
-    sandwich: 193,
-    sandwichColor: "hsl(113, 70%, 50%)",
-    kebab: 66,
-    kebabColor: "hsl(75, 70%, 50%)",
-    fries: 70,
-    friesColor: "hsl(203, 70%, 50%)",
-    donut: 92,
-    donutColor: "hsl(17, 70%, 50%)"
-  },
-  {
-    country: "AG",
-    "hot dog": 151,
-    "hot dogColor": "hsl(320, 70%, 50%)",
-    burger: 95,
-    burgerColor: "hsl(175, 70%, 50%)",
-    sandwich: 134,
-    sandwichColor: "hsl(7, 70%, 50%)",
-    kebab: 62,
-    kebabColor: "hsl(119, 70%, 50%)",
-    fries: 154,
-    friesColor: "hsl(51, 70%, 50%)",
-    donut: 26,
-    donutColor: "hsl(186, 70%, 50%)"
-  },
-  {
-    country: "AI",
-    "hot dog": 108,
-    "hot dogColor": "hsl(39, 70%, 50%)",
-    burger: 145,
-    burgerColor: "hsl(208, 70%, 50%)",
-    sandwich: 199,
-    sandwichColor: "hsl(181, 70%, 50%)",
-    kebab: 59,
-    kebabColor: "hsl(187, 70%, 50%)",
-    fries: 169,
-    friesColor: "hsl(84, 70%, 50%)",
-    donut: 90,
-    donutColor: "hsl(10, 70%, 50%)"
-  },
-  {
-    country: "AL",
-    "hot dog": 87,
-    "hot dogColor": "hsl(190, 70%, 50%)",
-    burger: 11,
-    burgerColor: "hsl(202, 70%, 50%)",
-    sandwich: 96,
-    sandwichColor: "hsl(192, 70%, 50%)",
-    kebab: 42,
-    kebabColor: "hsl(254, 70%, 50%)",
-    fries: 138,
-    friesColor: "hsl(204, 70%, 50%)",
-    donut: 47,
-    donutColor: "hsl(111, 70%, 50%)"
-  },
-  {
-    country: "AM",
-    "hot dog": 94,
-    "hot dogColor": "hsl(24, 70%, 50%)",
-    burger: 118,
-    burgerColor: "hsl(118, 70%, 50%)",
-    sandwich: 82,
-    sandwichColor: "hsl(312, 70%, 50%)",
-    kebab: 132,
-    kebabColor: "hsl(49, 70%, 50%)",
-    fries: 57,
-    friesColor: "hsl(0, 70%, 50%)",
-    donut: 13,
-    donutColor: "hsl(63, 70%, 50%)"
-  }
-];
-
 const datas = [
+  
   {
-    "donor_code": "110101",
-    "donor_edesc": "GoN",
-    "exp_gon70": 374847697.5327,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 467656798.67024,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 528243302.45994,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 737406330.64193,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 955728401.21432,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 601138606.1898,
-    "exp_grant75": 15901.292,
-    "exp_loan75": 0,
-    "total_expenditure": 4263749901396.82
-  },
-  {
-    "donor_code": "210101",
-    "donor_edesc": "ADB - General",
-    "exp_gon70": 0,
-    "exp_grant70": 5246574.42483,
-    "exp_loan70": 6261063.74069,
-    "exp_gon71": 0,
-    "exp_grant71": 5380981.51002,
-    "exp_loan71": 10031946.39329,
-    "exp_gon72": 0,
-    "exp_grant72": 6109098.02663,
-    "exp_loan72": 14996014.13812,
-    "exp_gon73": 0,
-    "exp_grant73": 7408251.42499,
-    "exp_loan73": 16863985.25497,
-    "exp_gon74": 0,
-    "exp_grant74": 5517915.05906,
-    "exp_loan74": 25322776.64463,
-    "exp_gon75": 19.5825,
-    "exp_grant75": 1183457.12764,
-    "exp_loan75": 14119533.63134,
-    "total_expenditure": 132383103552.16
-  },
-  {
-    "donor_code": "210102",
-    "donor_edesc": "JFPR",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 123219.558,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 77267.963,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 325395.78332,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 325816.45539,
-    "exp_loan75": 0,
-    "total_expenditure": 857080061.71
-  },
-  {
-    "donor_code": "210103",
-    "donor_edesc": "ADB- Pool Fund",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 623428.92521,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 283158.69622,
-    "exp_gon73": 0,
-    "exp_grant73": 111592.34598,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 96104.61548,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 9169.188,
-    "exp_loan75": 0,
-    "total_expenditure": 1123453770.89
-  },
-  {
-    "donor_code": "210301",
-    "donor_edesc": "IDA - General",
-    "exp_gon70": 0,
-    "exp_grant70": 9607099.78887,
-    "exp_loan70": 7456736.91153,
-    "exp_gon71": 0,
-    "exp_grant71": 5906844.81786,
-    "exp_loan71": 5864201.69496,
-    "exp_gon72": 0,
-    "exp_grant72": 7084526.88498,
-    "exp_loan72": 11680935.07387,
-    "exp_gon73": 0,
-    "exp_grant73": 8707592.81546,
-    "exp_loan73": 25512446.44257,
-    "exp_gon74": 0,
-    "exp_grant74": 4866012.80218,
-    "exp_loan74": 47482389.2813,
-    "exp_gon75": 0,
-    "exp_grant75": 707469.96173,
-    "exp_loan75": 27747154.2013,
-    "total_expenditure": 185212350957.53
-  },
-  {
-    "donor_code": "210302",
-    "donor_edesc": "WB - GEF",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 88581.64255,
-    "exp_loan71": 2625193.32643,
-    "exp_gon72": 0,
-    "exp_grant72": 67136.61026,
-    "exp_loan72": 1615192.41632,
-    "exp_gon73": 0,
-    "exp_grant73": 2340.23,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 4398444225.56
-  },
-  {
-    "donor_code": "210303",
-    "donor_edesc": "WB - Trust Fund",
-    "exp_gon70": 0,
-    "exp_grant70": 171805.31463,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 154996.82465,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 248376.14423,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 323677.82444,
-    "exp_loan73": 264282,
-    "exp_gon74": 0,
-    "exp_grant74": 955006.2275,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 16948.12791,
-    "exp_loan75": 0,
-    "total_expenditure": 3175740091.11
-  },
-  {
-    "donor_code": "210304",
-    "donor_edesc": "IDA - Pool Fund",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 160000
-  },
-  {
-    "donor_code": "210305",
-    "donor_edesc": "World Bank",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 112276.82558,
-    "exp_loan74": 136434.74469,
-    "exp_gon75": 0,
-    "exp_grant75": 31447.561,
-    "exp_loan75": 0,
-    "total_expenditure": 280159131.27
-  },
-  {
-    "donor_code": "210401",
-    "donor_edesc": "IMF",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 5084545.74577,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 5084545745.77
-  },
-  {
-    "donor_code": "210601",
-    "donor_edesc": "NDF",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 81907.9157,
-    "exp_loan71": 122502.39631,
-    "exp_gon72": 0,
-    "exp_grant72": 24877.93294,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 76419.64693,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 77454.34231,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 383162234.19
-  },
-  {
-    "donor_code": "210701",
-    "donor_edesc": "OFID",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 647313.49215,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 1267842.28721,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 817410.44354,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 1109639.36435,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 1517796.21987,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 386471.48687,
-    "total_expenditure": 6825374268.54
-  },
-  {
-    "donor_code": "210801",
-    "donor_edesc": "SAARC Fund",
-    "exp_gon70": 0,
-    "exp_grant70": 10086.108,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 97807.50459,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 32600.46415,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 11687.63193,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 9097.49475,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 13337.794,
-    "exp_loan75": 0,
-    "total_expenditure": 177757658.42
-  },
-  {
-    "donor_code": "210901",
-    "donor_edesc": "UN",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 0
-  },
-  {
-    "donor_code": "210902",
-    "donor_edesc": "UNDP",
-    "exp_gon70": 0,
-    "exp_grant70": 50942.45,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 25450.809,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 36993.993,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 194190252
-  },
-  {
-    "donor_code": "210904",
-    "donor_edesc": "UNCDF",
-    "exp_gon70": 0,
-    "exp_grant70": 35181.029,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 44146685
-  },
-  {
-    "donor_code": "210907",
-    "donor_edesc": "UNESCO",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 206900
-  },
-  {
-    "donor_code": "210908",
-    "donor_edesc": "UNFPA",
-    "exp_gon70": 0,
-    "exp_grant70": 44655.80346,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 37341.39727,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 32256.665,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 16690.7,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 8584.793,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 6941.444,
-    "exp_loan75": 0,
-    "total_expenditure": 192004129.34
-  },
-  {
-    "donor_code": "210910",
-    "donor_edesc": "UNHCR",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 526.5,
-    "exp_loan75": 0,
-    "total_expenditure": 526500
-  },
-  {
-    "donor_code": "210911",
-    "donor_edesc": "UNICEF",
-    "exp_gon70": 0,
-    "exp_grant70": 312499.58252,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 232069.47791,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 728065.69972,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 599397.14463,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 369785.1487,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 165016.84819,
-    "exp_loan75": 0,
-    "total_expenditure": 3144650485.19
-  },
-  {
-    "donor_code": "210913",
-    "donor_edesc": "UNAIDS",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 0
-  },
-  {
-    "donor_code": "210914",
-    "donor_edesc": "UNWOMEN",
-    "exp_gon70": 0,
-    "exp_grant70": 2988.65896,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 1379.02591,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 4367684.87
-  },
-  {
-    "donor_code": "210917",
-    "donor_edesc": "UNHABITAT",
-    "exp_gon70": 0,
-    "exp_grant70": 0,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 0,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 109.5,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 109500
-  },
-  {
-    "donor_code": "210918",
-    "donor_edesc": "UN -GEF",
-    "exp_gon70": 0,
-    "exp_grant70": 4394.719,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 4089.424,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 8484143
-  },
-  {
-    "donor_code": "210919",
-    "donor_edesc": "IOM",
-    "exp_gon70": 0,
-    "exp_grant70": 4698.569,
-    "exp_loan70": 0,
-    "exp_gon71": 0,
-    "exp_grant71": 6077,
-    "exp_loan71": 0,
-    "exp_gon72": 0,
-    "exp_grant72": 0,
-    "exp_loan72": 0,
-    "exp_gon73": 0,
-    "exp_grant73": 0,
-    "exp_loan73": 0,
-    "exp_gon74": 0,
-    "exp_grant74": 0,
-    "exp_loan74": 0,
-    "exp_gon75": 0,
-    "exp_grant75": 0,
-    "exp_loan75": 0,
-    "total_expenditure": 10775569
+    donor_code: "210919",
+    donor_edesc: "IOM",
+    exp_gon70: 0,
+    exp_grant70: 4698.569,
+    exp_loan70: 0,
+    exp_gon71: 0,
+    exp_grant71: 6077,
+    exp_loan71: 0,
+    exp_gon72: 0,
+    exp_grant72: 0,
+    exp_loan72: 0,
+    exp_gon73: 0,
+    exp_grant73: 0,
+    exp_loan73: 0,
+    exp_gon74: 0,
+    exp_grant74: 0,
+    exp_loan74: 0,
+    exp_gon75: 0,
+    exp_grant75: 0,
+    exp_loan75: 0,
+    total_expenditure: 10775569
   }
 ];
 
-class Dashboard extends Component {
-  componentDidMount() {
-    // const data = {
-    //   type: "tests"
-    // };
-    // console.log(data);
-    // this.props.dashboard(data);
+const Dashboard = (props) => {
+  // const [data] = useState();
+  const {
+    getExpenditure,
+    expenditure,
+    loading,
+    setLoading,
+    resetLoading,
+    error
+  } = props;
+  // console.log(props);
+  useEffect(() => {
+    setLoading();
+    getExpenditure()
+      .then(() => resetLoading())
+      .catch((err) => {
+        console.log(err);
+        resetLoading();
+      });
+  }, []);
+  // const [loading, setloading] = useState(loading)
+  // const kahsjdhf = () => {
+  //   setLoading(false)
+  // }
+  // const datass=expenditure;
+  console.log(expenditure)
+  if(loading){
+    return <p>loading</p>
   }
-  render() {
-    // console.log(data)
-    return (
+  return (
+    <div style={{height: 400}}>
+    {/* {console.log(data)} */}
+      {/* { loading && <p>loading</p> } */}
       <ResponsiveBar
-        data={datas}
-        keys={["exp_gon70", "exp_grant70", "exp_gon71", "exp_grant71", "exp_loan71", "exp_gon72","exp_grant72","exp_loan72","exp_gon73","exp_grant73","exp_loan73","exp_gon74","exp_grant74","exp_loan74","exp_gon75","exp_grant75","exp_loan75"]}
+        data={expenditure}
+        keys={[
+          "exp_gon70",
+          "exp_grant70",
+          "exp_gon71",
+          "exp_grant71",
+          "exp_loan71",
+          "exp_gon72",
+          "exp_grant72",
+          "exp_loan72",
+          "exp_gon73",
+          "exp_grant73",
+          "exp_loan73",
+          "exp_gon74",
+          "exp_grant74",
+          "exp_loan74",
+          "exp_gon75",
+          "exp_grant75",
+          "exp_loan75"
+        ]}
         indexBy="donor_edesc"
         margin={{ top: 80, right: 130, bottom: 50, left: 90 }}
         padding={0.3}
@@ -757,9 +142,9 @@ class Dashboard extends Component {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "food",
+          legend: "expenditure",
           legendPosition: "middle",
-          legendOffset: -40
+          legendOffset: -75
         }}
         labelSkipWidth={12}
         labelSkipHeight={12}
@@ -792,15 +177,24 @@ class Dashboard extends Component {
         motionStiffness={90}
         motionDamping={15}
       />
-    );
-  }
-}
+    </div>
+  );
+};
 
-const mapStateToProps = (state) => ({
-  dashboard: state.dashboard
-});
+const mapStateToProps = (state) => {
+  return {
+    ...state.dashboard,
+    ...state.global
+  };
+};
+
+const mapDispatchToProps = {
+  getExpenditure,
+  setLoading,
+  resetLoading
+};
 
 export default connect(
   mapStateToProps,
-  { dashboard }
+  mapDispatchToProps
 )(Dashboard);
