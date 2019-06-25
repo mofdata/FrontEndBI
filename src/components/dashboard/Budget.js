@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {
-  getExpenditure,
   setLoading,
   resetLoading,
+  getBudget
 } from "../../actions/dashboardActions";
 import { ResponsiveBar } from "@nivo/bar";
 
-const Dashboard = (props) => {
+
+const Budget = (props) => {
   // const [data] = useState();
   const {
-    getExpenditure,
-    expenditure,
+    getBudget,
+    budget,
     loading,
     setLoading,
     resetLoading,
@@ -20,50 +21,44 @@ const Dashboard = (props) => {
   // console.log(props);
   useEffect(() => {
     setLoading();
-    getExpenditure()
+    getBudget()
       .then(() => resetLoading())
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         resetLoading();
       });
   }, []);
-  // const [loading, setloading] = useState(loading)
-  // const kahsjdhf = () => {
-  //   setLoading(false)
-  // }
-  // const datass=expenditure;
-  // console.log(budget)
+  console.log(budget)
   if(loading){
     return <p>loading</p>
   }
   return (
-    <div style={{height: 400}}>
+    <div style={{height: 500}}>
     {/* {console.log(data)} */}
       {/* { loading && <p>loading</p> } */}
       <ResponsiveBar
-        data={expenditure}
+        data={budget}
         keys={[
-          "exp_gon70",
-          "exp_grant70",
-          "exp_loan70",
-          "exp_gon71",
-          "exp_grant71",
-          "exp_loan71",
-          "exp_gon72",
-          "exp_grant72",
-          "exp_loan72",
-          "exp_gon73",
-          "exp_grant73",
-          "exp_loan73",
-          "exp_gon74",
-          "exp_grant74",
-          "exp_loan74",
-          "exp_gon75",
-          "exp_grant75",
-          "exp_loan75"
+            "bud_gon70",
+            "bud_grant70",
+            "bud_loan70",
+            "bud_gon71",
+            "bud_grant71",
+            "bud_loan71",
+            "bud_gon72",
+            "bud_grant72",
+            "bud_loan72",
+            "bud_gon73",
+            "bud_grant73",
+            "bud_loan73",
+            "bud_gon74",
+            "bud_grant74",
+            "bud_loan74",
+            "bud_gon75",
+            "bud_grant75"
         ]}
         indexBy="donor_edesc"
-        margin={{ top: 80, right: 130, bottom: 50, left: 90 }}
+        margin={{ top: 100, right: 130, bottom: 50, left: 90 }}
         padding={0.3}
         groupMode="grouped"
         colors={{ scheme: "nivo" }}
@@ -116,7 +111,7 @@ const Dashboard = (props) => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "expenditure",
+          legend: "budget",
           legendPosition: "middle",
           legendOffset: -75
         }}
@@ -163,12 +158,12 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  getExpenditure,
   setLoading,
   resetLoading,
+  getBudget
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Dashboard);
+)(Budget);
